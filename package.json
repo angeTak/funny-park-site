@@ -1,0 +1,41 @@
+{
+  "name": "funny-park-lome-website",
+  "version": "1.0.0",
+  "description": "Site web officiel de Funny Park Lomé - Parc de loisirs familial",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx http-server . -p 3000 -o",
+    "dev": "npx live-server . --port=3000",
+    "download-images": "node download-images.js",
+    "optimize-images": "npx imagemin images/* --out-dir=images/optimized",
+    "build": "echo 'Site statique - pas de build nécessaire'"
+  },
+  "keywords": [
+    "funny-park",
+    "lome",
+    "togo",
+    "parc-loisirs",
+    "water-park",
+    "karting",
+    "trampoline"
+  ],
+  "author": "Funny Park Lomé",
+  "license": "MIT",
+  "devDependencies": {
+    "axios": "^1.6.0",
+    "cheerio": "^1.0.0-rc.12",
+    "fs-extra": "^11.1.1",
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2",
+    "imagemin": "^8.0.1",
+    "imagemin-cli": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/funnyparklome/website.git"
+  },
+  "homepage": "https://funnyparklome.com",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

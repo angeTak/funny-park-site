@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Galerie - Funny Park Lomé</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-image { max-width: 300px; margin: 10px; border: 1px solid #ccc; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>Test de la galerie Funny Park Lomé</h1>
+    
+    <div id="status"></div>
+    
+    <h2>Images statiques (test direct)</h2>
+    <div id="static-images"></div>
+    
+    <h2>Images dynamiques (via gallery.json)</h2>
+    <div id="dynamic-images"></div>
+    
+    <script>
+        const statusDiv = document.getElementById('status');
+        const staticDiv = document.getElementById('static-images');
+        const dynamicDiv = document.getElementById('dynamic-images');
+        
+        // Test des images statiques
+        function testStaticImages() {
+            const images = [
+                'images/waterpark.jpg',
+                'images/arcade.jpg',
+                'images/karting.jpg',
+                'images/trampoline.jpg',
+                'images/snack.jpg'
+            ];
+            
+            images.forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'test-image';
+                img.alt = 'Test image';
+                
+                img.onload = () => {
+                    console.log(`✅ Image chargée: ${src}`);
+                };
+                
+                img.onerror = () => {
+                    console.error(`❌ Erreur image: ${src}`);
+                    img.style.border = '2px solid red';
+                };
+                
+                staticDiv.appendChild(img);
+            });
+        }
+        
+        // Test du chargement dynamique
+        async function testDynamicImages() {
+            try {
+                const response = await fetch('gallery.json');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                statusDiv.innerHTML = '<div class="status success">✅ gallery.json chargé avec succès</div>';
+                
+                data.local.forEach(src => {
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.className = 'test-image';
+                    img.alt = 'Image dynamique';
+                    
+                    img.onload = () => {
+                        console.log(`✅ Image dynamique chargée: ${src}`);
+                    };
+                    
+                    img.onerror = () => {
+                        console.error(`❌ Erreur image dynamique: ${src}`);
+                        img.style.border = '2px solid red';
+                    };
+                    
+                    dynamicDiv.appendChild(img);
+                });
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                statusDiv.innerHTML = `<div class="status error">❌ Erreur: ${error.message}</div>`;
+            }
+        }
+        
+        // Exécuter les tests
+        testStaticImages();
+        testDynamicImages();
+    </script>
+</body>
+</html>

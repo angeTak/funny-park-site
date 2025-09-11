@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Images - Funny Park Lomé</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f5f5f5;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .image-test {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .image-test img {
+            max-width: 200px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔍 Debug des Images - Funny Park Lomé</h1>
+        
+        <div id="status"></div>
+        
+        <h2>Test des chemins d'images</h2>
+        <div id="path-tests"></div>
+        
+        <h2>Test des images individuelles</h2>
+        <div id="image-tests"></div>
+        
+        <h2>Test de la galerie complète</h2>
+        <div id="gallery-test" class="image-test">
+            <h3>Galerie actuelle :</h3>
+            <div id="gallery-images"></div>
+        </div>
+    </div>
+    
+    <script>
+        const statusDiv = document.getElementById('status');
+        const pathTestsDiv = document.getElementById('path-tests');
+        const imageTestsDiv = document.getElementById('image-tests');
+        const galleryImagesDiv = document.getElementById('gallery-images');
+        
+        const images = [
+            'images/waterpark.jpg',
+            'images/arcade.jpg',
+            'images/karting.jpg',
+            'images/trampoline.jpg',
+            'images/snack.jpg'
+        ];
+        
+        let loadedCount = 0;
+        let errorCount = 0;
+        
+        function addStatus(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            statusDiv.appendChild(div);
+        }
+        
+        function testImagePath(path) {
+            const div = document.createElement('div');
+            div.className = 'image-test';
+            div.innerHTML = `
+                <h4>Test: ${path}</h4>
+                <img src="${path}" alt="Test ${path}" onload="imageLoaded('${path}')" onerror="imageError('${path}')" />
+                <p>Status: <span id="status-${path.replace(/[^a-zA-Z0-9]/g, '')}">Chargement...</span></p>
+            `;
+            imageTestsDiv.appendChild(div);
+        }
+        
+        function imageLoaded(path) {
+            loadedCount++;
+            const statusId = path.replace(/[^a-zA-Z0-9]/g, '');
+            const statusEl = document.getElementById(`status-${statusId}`);
+            if (statusEl) {
+                statusEl.textContent = '✅ Chargée avec succès';
+                statusEl.style.color = 'green';
+            }
+            updateSummary();
+        }
+        
+        function imageError(path) {
+            errorCount++;
+            const statusId = path.replace(/[^a-zA-Z0-9]/g, '');
+            const statusEl = document.getElementById(`status-${statusId}`);
+            if (statusEl) {
+                statusEl.textContent = '❌ Erreur de chargement';
+                statusEl.style.color = 'red';
+            }
+            updateSummary();
+        }
+        
+        function updateSummary() {
+            const total = loadedCount + errorCount;
+            if (total === images.length) {
+                addStatus(`Résumé: ${loadedCount}/${total} images chargées avec succès`, loadedCount === total ? 'success' : 'error');
+            }
+        }
+        
+        // Test des chemins
+        addStatus('🔍 Début des tests...', 'info');
+        
+        // Test de chaque image
+        images.forEach(path => {
+            testImagePath(path);
+        });
+        
+        // Test de la galerie complète
+        images.forEach(path => {
+            const img = document.createElement('img');
+            img.src = path;
+            img.alt = path;
+            img.style.margin = '5px';
+            img.style.maxWidth = '150px';
+            img.style.height = '100px';
+            img.style.objectFit = 'cover';
+            img.style.borderRadius = '5px';
+            galleryImagesDiv.appendChild(img);
+        });
+        
+        // Test du serveur
+        fetch('images/waterpark.jpg', { method: 'HEAD' })
+            .then(response => {
+                if (response.ok) {
+                    addStatus('✅ Serveur fonctionne correctement', 'success');
+                } else {
+                    addStatus('❌ Problème avec le serveur', 'error');
+                }
+            })
+            .catch(error => {
+                addStatus(`❌ Erreur serveur: ${error.message}`, 'error');
+            });
+    </script>
+</body>
+</html>

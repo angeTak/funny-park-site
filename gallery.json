@@ -1,0 +1,74 @@
+{
+  "local": [
+    "images/images.jpeg",
+    "images/téléchargement.jpeg",
+    "images/images (1).jpeg",
+    "images/images (2).jpeg",
+    "images/images (3).jpeg",
+    "images/images (4).jpeg",
+    "images/images (5).jpeg",
+    "images/images (6).jpeg",
+    "images/images (7).jpeg",
+    "images/images (8).jpeg",
+    "images/images (9).jpeg",
+    "images/karting.jpg"
+  ],
+  "external_examples": [],
+  "suggested_images": [
+    {
+      "type": "water_park",
+      "description": "Toboggans aquatiques colorés du water park",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Toboggans aquatiques Funny Park Lomé"
+    },
+    {
+      "type": "arcade_games", 
+      "description": "Salle de jeux climatisée avec arcades",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Salle de jeux arcades Funny Park Lomé"
+    },
+    {
+      "type": "karting_track",
+      "description": "Piste de karting en plein air",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Piste de karting Funny Park Lomé"
+    },
+    {
+      "type": "trampoline_zone",
+      "description": "Zone trampoline pour enfants",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Zone trampoline Funny Park Lomé"
+    },
+    {
+      "type": "restaurant_snack",
+      "description": "Restaurant et snack du parc",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Restaurant snack Funny Park Lomé"
+    },
+    {
+      "type": "pony_club",
+      "description": "Poney club et balades",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Poney club Funny Park Lomé"
+    },
+    {
+      "type": "birthday_events",
+      "description": "Célébrations d'anniversaires",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Anniversaires Funny Park Lomé"
+    },
+    {
+      "type": "park_overview",
+      "description": "Vue générale du parc",
+      "sources": ["instagram", "facebook"],
+      "alt_text": "Vue générale Funny Park Lomé"
+    }
+  ],
+  "contact_info": {
+    "phone": "+22892110110",
+    "whatsapp": "https://wa.me/22892110110",
+    "email": "funnypark.lome@gmail.com",
+    "instagram": "https://www.instagram.com/funnyparklome/",
+    "facebook": "https://www.facebook.com/Funny.park.lome/"
+  }
+}
