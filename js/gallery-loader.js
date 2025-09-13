@@ -53,7 +53,7 @@ class FunnyParkGallery {
   }
 
   loadLocalImages() {
-    if (!this.manifest?.local) return;
+    if (!this.manifest?.local || !this.galleryContainer) return;
     
     this.galleryContainer.innerHTML = '';
     this.manifest.local.forEach(imagePath => {
@@ -62,6 +62,8 @@ class FunnyParkGallery {
   }
 
   addImage(src, alt = 'Funny Park Lomé') {
+    if (!this.galleryContainer) return;
+    
     const img = document.createElement('img');
     img.src = src;
     img.alt = alt;
@@ -96,6 +98,8 @@ class FunnyParkGallery {
           <button onclick="location.reload()">Réessayer</button>
         </div>
       `;
+    } else {
+      console.error('Gallery container not found:', message);
     }
   }
 
@@ -108,6 +112,8 @@ class FunnyParkGallery {
 
   // Méthode pour filtrer les images par type
   filterByType(type) {
+    if (!this.galleryContainer) return;
+    
     const images = this.galleryContainer.querySelectorAll('img');
     images.forEach(img => {
       const shouldShow = !type || img.alt.toLowerCase().includes(type.toLowerCase());

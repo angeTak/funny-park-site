@@ -2,17 +2,80 @@
 const $ = (s,root=document)=>root.querySelector(s);
 const $$ = (s,root=document)=>[...root.querySelectorAll(s)];
 
-// Burger menu
+// Burger menu - Fonction globale pour éviter les conflits
+window.initBurgerMenu = function() {
+  console.log('🍔 Initialisation du menu burger...');
+  
+  const burger = $('.burger');
+  const mobile = $('.navlinks');
+  
+  console.log('Éléments trouvés:', { burger: !!burger, mobile: !!mobile });
+  
+  if (burger && mobile) {
+    // Supprimer les anciens event listeners s'ils existent
+    const newBurger = burger.cloneNode(true);
+    burger.parentNode.replaceChild(newBurger, burger);
+    
+    newBurger.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const isOpen = mobile.classList.contains('open');
+      
+      if (isOpen) {
+        mobile.classList.remove('open');
+        newBurger.setAttribute('aria-expanded', 'false');
+        newBurger.classList.remove('active');
+      } else {
+        mobile.classList.add('open');
+        newBurger.setAttribute('aria-expanded', 'true');
+        newBurger.classList.add('active');
+      }
+      
+      console.log('🍔 Menu burger cliqué, état:', isOpen ? 'fermé' : 'ouvert');
+    });
+    
+    console.log('✅ Menu burger initialisé avec succès');
+  } else {
+    console.warn('⚠️ Éléments du menu burger non trouvés');
+  }
+};
+
+// Initialiser immédiatement si les éléments sont déjà présents
 const burger = $('.burger');
-const mobile = $('#menumobile');
-burger?.addEventListener('click',()=>{
-  const open = mobile.style.display === 'block';
-  mobile.style.display = open ? 'none' : 'block';
-  burger.setAttribute('aria-expanded', String(!open));
-});
+const mobile = $('.navlinks');
+if (burger && mobile) {
+  window.initBurgerMenu();
+  
+  // Fermer le menu en cliquant sur un lien
+  const navLinks = mobile.querySelectorAll('a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      mobile.classList.remove('open');
+      const currentBurger = $('.burger');
+      if (currentBurger) {
+        currentBurger.setAttribute('aria-expanded', 'false');
+        currentBurger.classList.remove('active');
+      }
+    });
+  });
+  
+  // Fermer le menu en cliquant à l'extérieur
+  document.addEventListener('click', (e) => {
+    const currentBurger = $('.burger');
+    if (currentBurger && !mobile.contains(e.target) && !currentBurger.contains(e.target)) {
+      mobile.classList.remove('open');
+      currentBurger.setAttribute('aria-expanded', 'false');
+      currentBurger.classList.remove('active');
+    }
+  });
+}
 
 // Année courante
-$('#year').textContent = new Date().getFullYear();
+const yearEl = $('#year');
+if (yearEl) {
+  yearEl.textContent = new Date().getFullYear();
+}
 
 // Statut d’ouverture en TZ Lomé
 (function setOpenStatus(){
@@ -35,18 +98,22 @@ $('#year').textContent = new Date().getFullYear();
 
   // surligner la ligne du jour
   const rows = $$('#horaires table tbody tr');
-  rows.forEach(r=>{
-    if(r.firstElementChild.textContent.toLowerCase()===day.toLowerCase()){
-      r.classList.add('today');
-    }
-  });
+  if (rows.length > 0) {
+    rows.forEach(r=>{
+      if(r.firstElementChild && r.firstElementChild.textContent.toLowerCase()===day.toLowerCase()){
+        r.classList.add('today');
+      }
+    });
+  }
 
   const slot = schedule[day.toLowerCase()];
   const statusEl = $('#statusPark');
-  if(!slot){
-    statusEl.classList.add('closed');
-    statusEl.innerHTML = '🔴 Fermé aujourd\'hui (Lundi)';
-    return;
+  if (statusEl) {
+    if(!slot){
+      statusEl.classList.add('closed');
+      statusEl.innerHTML = '🔴 Fermé aujourd\'hui (Lundi)';
+      return;
+    }
   }
   const [start,end] = slot;
   const toMinutes = (h,m)=>h*60+m;
@@ -55,12 +122,14 @@ $('#year').textContent = new Date().getFullYear();
   const openMin = toMinutes(start[0], start[1]);
   const closeMin = toMinutes(end[0], end[1]);
 
-  if(nowMin>=openMin && nowMin<closeMin){
-    statusEl.classList.add('open');
-    statusEl.innerHTML = `🟢 Ouvert — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
-  }else{
-    statusEl.classList.add('closed');
-    statusEl.innerHTML = `🔴 Fermé — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
+  if (statusEl) {
+    if(nowMin>=openMin && nowMin<closeMin){
+      statusEl.classList.add('open');
+      statusEl.innerHTML = `🟢 Ouvert — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
+    }else{
+      statusEl.classList.add('closed');
+      statusEl.innerHTML = `🔴 Fermé — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
+    }
   }
 })();
 
@@ -371,8 +440,11 @@ async function enhanceGallery(){
       
       // Ajouter un effet de clic pour agrandir
       img.onclick = () => {
-        openLightbox(img.src, img.alt, index);
+        openImageLightbox(img.src, img.alt, index);
       };
+      
+      // Ajouter un curseur pointer pour indiquer que l'image est cliquable
+      img.style.cursor = 'pointer';
       
       // Ajouter un délai d'animation pour l'apparition
       img.style.opacity = '0';
@@ -395,8 +467,10 @@ async function enhanceGallery(){
   }
 }
 
-// Lightbox simple
-function openLightbox(src, alt, index) {
+// Lightbox simple pour les images
+function openImageLightbox(src, alt, index) {
+  console.log('Ouverture lightbox pour:', src);
+  
   const lightbox = document.createElement('div');
   lightbox.className = 'lightbox';
   lightbox.innerHTML = `
@@ -406,29 +480,41 @@ function openLightbox(src, alt, index) {
         <h3>${alt}</h3>
         <p>Image ${index + 1} de la galerie</p>
       </div>
-      <button class="lightbox-close" onclick="closeLightbox()">×</button>
+      <button class="lightbox-close" onclick="closeImageLightbox()">×</button>
     </div>
   `;
   
   document.body.appendChild(lightbox);
   document.body.style.overflow = 'hidden';
   
+  // Animation d'entrée
+  setTimeout(() => {
+    lightbox.style.opacity = '1';
+  }, 10);
+  
   // Fermer au clic sur l'arrière-plan
   lightbox.onclick = (e) => {
-    if (e.target === lightbox) closeLightbox();
+    if (e.target === lightbox) closeImageLightbox();
   };
   
   // Fermer avec la touche Échap
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeLightbox();
-  });
+  const escapeHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeImageLightbox();
+      document.removeEventListener('keydown', escapeHandler);
+    }
+  };
+  document.addEventListener('keydown', escapeHandler);
 }
 
-function closeLightbox() {
+function closeImageLightbox() {
   const lightbox = document.querySelector('.lightbox');
   if (lightbox) {
-    lightbox.remove();
-    document.body.style.overflow = '';
+    lightbox.style.opacity = '0';
+    setTimeout(() => {
+      lightbox.remove();
+      document.body.style.overflow = '';
+    }, 300);
   }
 }
 
@@ -480,4 +566,265 @@ function getAltTextFromPath(path) {
   return altTexts[filename] || 'Funny Park Lomé';
 }
 
-document.addEventListener('DOMContentLoaded', enhanceGallery);
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('🚀 Initialisation des interactions...');
+  
+  // Initialiser le menu burger
+  if (typeof window.initBurgerMenu === 'function') {
+    window.initBurgerMenu();
+  }
+  
+  // Debug: Vérifier que tous les éléments cliquables sont présents
+  const clickableElements = {
+    burger: document.querySelector('.burger'),
+    navLinks: document.querySelectorAll('.navlinks a'),
+    galleryImages: document.querySelectorAll('.gallery-image'),
+    buttons: document.querySelectorAll('button, .btn'),
+    socialLinks: document.querySelectorAll('.social-link')
+  };
+  
+  console.log('Éléments cliquables trouvés:', {
+    burger: !!clickableElements.burger,
+    navLinks: clickableElements.navLinks.length,
+    galleryImages: clickableElements.galleryImages.length,
+    buttons: clickableElements.buttons.length,
+    socialLinks: clickableElements.socialLinks.length
+  });
+  
+  // Ajouter des event listeners de debug
+  clickableElements.navLinks.forEach((link, index) => {
+    link.addEventListener('click', () => {
+      console.log(`🔗 Lien de navigation cliqué: ${link.textContent}`);
+    });
+  });
+  
+  clickableElements.buttons.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+      console.log(`🔘 Bouton cliqué: ${btn.textContent || btn.className}`);
+    });
+  });
+  
+  clickableElements.socialLinks.forEach((link, index) => {
+    link.addEventListener('click', () => {
+      console.log(`📱 Lien social cliqué: ${link.getAttribute('aria-label')}`);
+    });
+  });
+  
+  // Initialiser la galerie
+  enhanceGallery();
+  
+  console.log('✅ Interactions initialisées avec succès');
+});
+
+// Ajouter les styles CSS pour la lightbox et le menu burger
+const additionalStyles = `
+  /* Styles pour la lightbox */
+  .lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .lightbox-content {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+  
+  .lightbox-content img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .lightbox-info {
+    padding: 1rem;
+    text-align: center;
+  }
+  
+  .lightbox-info h3 {
+    margin: 0 0 0.5rem 0;
+    color: #333;
+    font-size: 1.2rem;
+  }
+  
+  .lightbox-info p {
+    margin: 0;
+    color: #666;
+    font-size: 0.9rem;
+  }
+  
+  .lightbox-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+  }
+  
+  .lightbox-close:hover {
+    background: rgba(0, 0, 0, 0.9);
+  }
+  
+  /* Styles pour le menu burger */
+  .burger {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+    color: #333;
+    transition: color 0.2s ease;
+    z-index: 1001;
+  }
+  
+  .burger:hover {
+    color: var(--brand-blue);
+  }
+  
+  .burger.active {
+    color: var(--brand-blue);
+  }
+  
+  /* Menu mobile responsive */
+  @media (max-width: 768px) {
+    .burger {
+      display: block !important;
+    }
+    
+    .navlinks {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      padding: 1rem;
+      transform: translateY(-100%);
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    
+    .navlinks.open {
+      transform: translateY(0);
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .navlinks a {
+      display: block;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #eee;
+      text-decoration: none;
+      color: #333;
+      transition: color 0.2s ease;
+    }
+    
+    .navlinks a:hover {
+      color: var(--brand-blue);
+    }
+    
+    .nav-social {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #eee;
+    }
+    
+    .nav-social a {
+      display: inline-block;
+      margin-right: 1rem;
+      border-bottom: none;
+      padding: 0.5rem;
+    }
+    
+    .cta {
+      margin-top: 1rem;
+      display: block;
+      text-align: center;
+      padding: 0.75rem;
+      background: var(--brand-blue);
+      color: white;
+      border-radius: 8px;
+    }
+  }
+  
+  /* Styles pour desktop */
+  @media (min-width: 769px) {
+    .burger {
+      display: none !important;
+    }
+    
+    .navlinks {
+      display: flex !important;
+      align-items: center;
+      gap: 2rem;
+    }
+    
+    .navlinks a {
+      display: inline-block;
+      padding: 0.5rem 0;
+      text-decoration: none;
+      color: #333;
+      transition: color 0.2s ease;
+    }
+    
+    .navlinks a:hover {
+      color: var(--brand-blue);
+    }
+    
+    .nav-social {
+      display: flex;
+      gap: 1rem;
+      margin-left: 1rem;
+    }
+    
+    .nav-social a {
+      display: inline-block;
+      padding: 0.5rem;
+    }
+  }
+  
+  /* Curseur pointer pour les images cliquables */
+  .gallery-image {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .gallery-image:hover {
+    transform: scale(1.02);
+  }
+`;
+
+// Injecter les styles seulement si pas déjà présents
+if (!document.querySelector('#app-specific-styles')) {
+  const styleSheet = document.createElement('style');
+  styleSheet.id = 'app-specific-styles';
+  styleSheet.textContent = additionalStyles;
+  document.head.appendChild(styleSheet);
+}

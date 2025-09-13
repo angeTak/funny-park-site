@@ -23,11 +23,20 @@ class GalleryManager {
     const galleryItems = document.querySelectorAll('.gallery-item:not(.coming-soon)');
     this.images = Array.from(galleryItems);
     this.filteredImages = [...this.images];
+    
+    if (this.images.length === 0) {
+      console.warn('Aucune image de galerie trouvée');
+    }
   }
 
   setupFilters() {
     const filterButtons = document.querySelectorAll('.filter-btn');
     const galleryGrid = document.getElementById('galleryGrid');
+
+    if (filterButtons.length === 0) {
+      console.warn('Aucun bouton de filtre trouvé');
+      return;
+    }
 
     filterButtons.forEach(button => {
       button.addEventListener('click', () => {
@@ -67,11 +76,24 @@ class GalleryManager {
     const galleryItems = document.querySelectorAll('.gallery-item:not(.coming-soon)');
     const lightbox = document.getElementById('lightbox');
 
+    if (galleryItems.length === 0) {
+      console.warn('Aucun élément de galerie trouvé pour la lightbox');
+      return;
+    }
+
     galleryItems.forEach((item, index) => {
       const image = item.querySelector('img');
-      const title = item.querySelector('h3').textContent;
-      const description = item.querySelector('p').textContent;
+      const titleEl = item.querySelector('h3');
+      const descriptionEl = item.querySelector('p');
       const viewBtn = item.querySelector('.view-btn');
+
+      if (!image || !titleEl || !descriptionEl) {
+        console.warn('Élément de galerie incomplet:', item);
+        return;
+      }
+
+      const title = titleEl.textContent;
+      const description = descriptionEl.textContent;
 
       const openLightbox = () => {
         this.currentImageIndex = index;
@@ -86,11 +108,13 @@ class GalleryManager {
     });
 
     // Fermer la lightbox en cliquant sur l'arrière-plan
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox) {
-        this.closeLightbox();
-      }
-    });
+    if (lightbox) {
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          this.closeLightbox();
+        }
+      });
+    }
   }
 
   openLightbox(src, title, description) {
@@ -98,6 +122,11 @@ class GalleryManager {
     const lightboxImage = document.getElementById('lightboxImage');
     const lightboxTitle = document.getElementById('lightboxTitle');
     const lightboxDescription = document.getElementById('lightboxDescription');
+
+    if (!lightbox || !lightboxImage || !lightboxTitle || !lightboxDescription) {
+      console.error('Éléments de lightbox manquants');
+      return;
+    }
 
     lightboxImage.src = src;
     lightboxImage.alt = title;
@@ -113,8 +142,10 @@ class GalleryManager {
 
   closeLightbox() {
     const lightbox = document.getElementById('lightbox');
-    lightbox.classList.remove('active');
-    document.body.style.overflow = '';
+    if (lightbox) {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
   }
 
   prevImage() {
@@ -133,16 +164,27 @@ class GalleryManager {
 
   showCurrentImage() {
     const currentItem = this.filteredImages[this.currentImageIndex];
+    if (!currentItem) return;
+    
     const image = currentItem.querySelector('img');
-    const title = currentItem.querySelector('h3').textContent;
-    const description = currentItem.querySelector('p').textContent;
+    const titleEl = currentItem.querySelector('h3');
+    const descriptionEl = currentItem.querySelector('p');
+    
+    if (!image || !titleEl || !descriptionEl) {
+      console.error('Élément de galerie incomplet pour la navigation');
+      return;
+    }
+
+    const title = titleEl.textContent;
+    const description = descriptionEl.textContent;
 
     this.openLightbox(image.src, title, description);
   }
 
   setupKeyboardNavigation() {
     document.addEventListener('keydown', (e) => {
-      if (!document.getElementById('lightbox').classList.contains('active')) return;
+      const lightbox = document.getElementById('lightbox');
+      if (!lightbox || !lightbox.classList.contains('active')) return;
 
       switch (e.key) {
         case 'Escape':
@@ -203,11 +245,28 @@ function nextImage() {
 // Initialisation
 let galleryManager;
 
+// Attendre que le DOM soit prêt, mais ne pas interférer avec burger-menu.js
 document.addEventListener('DOMContentLoaded', () => {
-  galleryManager = new GalleryManager();
-  
-  // Année courante dans le footer
-  document.getElementById('year').textContent = new Date().getFullYear();
+  // Délai pour s'assurer que burger-menu.js s'est initialisé en premier
+  setTimeout(() => {
+    console.log('🖼️ Initialisation de la galerie...');
+    
+    galleryManager = new GalleryManager();
+    
+    // Année courante dans le footer (seulement si pas déjà fait par burger-menu.js)
+    const yearEl = document.getElementById('year');
+    if (yearEl && !yearEl.textContent) {
+      yearEl.textContent = new Date().getFullYear();
+    }
+    
+    // Réinitialiser le menu burger pour éviter les conflits
+    if (typeof window.reinitBurgerMenu === 'function') {
+      console.log('🍔 Réinitialisation du menu burger après chargement de la galerie');
+      window.reinitBurgerMenu();
+    }
+    
+    console.log('✅ Galerie initialisée avec succès');
+  }, 200); // Délai plus long pour éviter les conflits
 });
 
 // Styles CSS pour les animations
@@ -244,7 +303,10 @@ const galleryStyles = `
   }
 `;
 
-// Injecter les styles
-const styleSheet = document.createElement('style');
-styleSheet.textContent = galleryStyles;
-document.head.appendChild(styleSheet);
+// Injecter les styles seulement si pas déjà présents
+if (!document.querySelector('#gallery-specific-styles')) {
+  const styleSheet = document.createElement('style');
+  styleSheet.id = 'gallery-specific-styles';
+  styleSheet.textContent = galleryStyles;
+  document.head.appendChild(styleSheet);
+}
