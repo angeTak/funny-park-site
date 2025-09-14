@@ -1709,6 +1709,94 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   box-shadow: var(--shadow);
 }
 
+/* Placeholder pour la carte */
+.map-placeholder {
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #dee2e6;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.map-placeholder::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="%23e9ecef" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
+  opacity: 0.3;
+}
+
+.map-content {
+  text-align: center;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 300px;
+  backdrop-filter: blur(10px);
+}
+
+.map-content h3 {
+  margin: 0 0 1rem 0;
+  color: var(--ink-900);
+  font-size: 1.2rem;
+}
+
+.map-content p {
+  margin: 0.5rem 0;
+  color: var(--ink-600);
+  font-size: 0.9rem;
+}
+
+/* Responsive pour la carte placeholder */
+@media (max-width: 768px) {
+  .map-placeholder {
+    height: 250px;
+  }
+  
+  .map-content {
+    padding: 1.5rem;
+    max-width: 280px;
+  }
+  
+  .map-content h3 {
+    font-size: 1.1rem;
+  }
+  
+  .map-content p {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .map-placeholder {
+    height: 220px;
+  }
+  
+  .map-content {
+    padding: 1rem;
+    max-width: 250px;
+  }
+  
+  .map-content h3 {
+    font-size: 1rem;
+  }
+  
+  .map-content p {
+    font-size: 0.8rem;
+  }
+}
+
 /* Section FAQ */
 .faq-section {
   background: #f8f9fa;
