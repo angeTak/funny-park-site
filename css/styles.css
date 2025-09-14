@@ -226,7 +226,8 @@ section{padding:10px 0}
   }
   
   .hero-inner > div:first-child {
-    padding: 0 5px;
+    padding: 0 15px;
+    margin: 0 5px;
   }
   
   .masonry{
@@ -350,7 +351,7 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
 
 /* Responsive */
 @media (max-width: 960px){
-  .hero-inner{grid-template-columns:1fr}
+  .hero-inner{grid-template-columns:1fr; padding: 0 20px 28px;}
   .grid.attractions{grid-template-columns:repeat(2,1fr)}
   .pricing{grid-template-columns:1fr}
   .hours{grid-template-columns:1fr}
@@ -440,7 +441,8 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   }
   
   .hero-inner > div:first-child {
-    padding: 0 3px;
+    padding: 0 12px;
+    margin: 0 3px;
   }
   
   .mobile-social-icons {
@@ -470,12 +472,37 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   flex-direction: column;
     width: 100% !important;
     max-width: 100% !important;
-    padding: 0 !important;
+    padding: 0 20px !important;
   }
   
   .hero-inner > div:first-child {
     order: 2; /* Le contenu texte passe en 2ème position */
-    padding: 0 10px;
+    padding: 0 15px;
+    margin: 0 5px;
+  }
+  
+  .hero-inner > div:first-child .badge {
+    margin: 0 0 15px 0;
+  }
+  
+  .hero-inner > div:first-child h1 {
+    margin: 15px 0 20px 0;
+    padding: 0 5px;
+  }
+  
+  .hero-inner > div:first-child .lead {
+    margin: 0 0 20px 0;
+    padding: 0 5px;
+  }
+  
+  .hero-inner > div:first-child .actions {
+    margin: 0 0 20px 0;
+    padding: 0 5px;
+  }
+  
+  .hero-inner > div:first-child .chipbar {
+    margin: 0;
+    padding: 0 5px;
   }
   
   .hero-inner > aside {
@@ -689,16 +716,23 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
 .carousel-container {
   position: relative;
   width: 100%;
-  height: 400px;
+  height: 450px;
   overflow: hidden;
   border-radius: var(--radius);
-  background: #f0f0f0;
+  background: none;
+  max-width: 700px;
+  margin: 0 auto;
 }
 
 .carousel-slides {
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
 }
 
 .carousel-slide {
@@ -708,6 +742,10 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   width: 100%;
   height: 100%;
   display: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
 }
 
 .carousel-slide.active {
@@ -720,6 +758,13 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   object-fit: cover;
   object-position: center;
   display: block;
+  min-height: 450px;
+  max-width: 100%;
+  border: none;
+  outline: none;
+  margin: 0;
+  padding: 0;
+  background: none;
 }
 
 .carousel-image:not([src]),
@@ -738,6 +783,119 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
 .carousel-image[src=""]::after,
 .carousel-image[src*="undefined"]::after {
   content: "Image non disponible";
+}
+
+/* Responsive pour le carrousel */
+@media (max-width: 768px) {
+  .carousel-container {
+    height: 350px;
+    max-width: 100%;
+    width: 100%;
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-slides {
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-slide {
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-image {
+    height: 350px;
+    width: 100%;
+    max-width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+  
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .carousel-indicators {
+    bottom: 10px;
+  }
+  
+  .indicator {
+    width: 8px;
+    height: 8px;
+    margin: 0 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carousel-container {
+    max-width: 100%;
+    width: 100%;
+    height: 300px;
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-slides {
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-slide {
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-image {
+    height: 300px;
+    width: 100%;
+    max-width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
+}
+
+@media (max-width: 360px) {
+  .carousel-container {
+    max-width: 100%;
+    width: 100%;
+    height: 280px;
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .carousel-image {
+    height: 280px;
+    width: 100%;
+    max-width: 100%;
+    border: none;
+    margin: 0;
+    padding: 0;
+    background: none;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+  }
 }
 
 /* Contrôles du carrousel */
