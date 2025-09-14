@@ -39,7 +39,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.7);backdrop
 /* Hero */
 .hero{position:relative;isolation:isolate}
 .hero::before{content:"";position:absolute;inset:0;background:radial-gradient(1200px 400px at 10% -10%,rgba(255,212,0,.25),transparent 60%),radial-gradient(1000px 380px at 100% 10%,rgba(30,144,255,.25),transparent 55%),linear-gradient(180deg,#fff,rgba(255,247,224,.8));z-index:-1}
-.hero-inner{display:grid;grid-template-columns:1fr 1.2fr;gap:36px;align-items:center;padding:0 0 28px}
+.hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;padding:0 0 28px}
 .badge{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid #eee;border-radius:999px;padding:7px 12px;font-size:.9rem;box-shadow:0 8px 20px rgba(0,0,0,.06)}
 .badge b{color:var(--brand-red)}
 h1{font-size:clamp(2rem,3.5vw,3.2rem);line-height:1.1;margin:10px 0 12px}
@@ -51,7 +51,7 @@ h1{font-size:clamp(2rem,3.5vw,3.2rem);line-height:1.1;margin:10px 0 12px}
 .btn-ghost{background:#fff;border-color:#eee;color:var(--ink-900)}
 .chipbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
 .chip{background:#fff;border:1px dashed #e6e6e6;border-radius:999px;padding:8px 12px;font-size:.85rem;color:var(--ink-500)}
-.hero-card{background:#fff;border:1px solid #eee;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.hero-card{background:#fff;border:1px solid #eee;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);width:100%}
 .hero-card .top{position:relative;height:280px;background:linear-gradient(120deg,var(--brand-blue),var(--brand-yellow));display:grid;place-items:center}
 .hero-card .top h3{color:#fff;font-size:1.6rem;text-shadow:0 10px 30px rgba(0,0,0,.35)}
 .hero-card .stats{display:grid;grid-template-columns:repeat(3,1fr);}
@@ -508,8 +508,8 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   .hero-inner > aside {
     order: 1; /* La vidéo passe en 1ère position */
     margin-bottom: 20px;
-    width: 80% !important;
-    max-width: 80% !important;
+    width: 90vw !important;
+    max-width: 90vw !important;
     margin-left: auto;
     margin-right: auto;
   }
@@ -529,17 +529,6 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
     padding: 0 !important;
   }
   
-  .carousel-container {
-    min-height: 280px !important;
-    max-height: 350px !important;
-  }
-  
-  .carousel-image {
-    height: 100% !important;
-    width: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-  }
   
   .carousel-btn {
     width: 40px;
@@ -585,17 +574,6 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
     padding: 0 !important;
   }
   
-  .carousel-container {
-    min-height: 220px !important;
-    max-height: 280px !important;
-  }
-  
-  .carousel-image {
-    height: 100% !important;
-    width: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-  }
   
   .carousel-btn {
     width: 35px;
@@ -642,17 +620,6 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
     padding: 0 !important;
   }
   
-  .carousel-container {
-    min-height: 180px !important;
-    max-height: 220px !important;
-  }
-  
-  .carousel-image {
-    height: 100% !important;
-    width: 100% !important;
-    object-fit: cover !important;
-    object-position: center !important;
-  }
   
   .carousel-btn {
     width: 30px;
@@ -720,7 +687,7 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   overflow: hidden;
   border-radius: var(--radius);
   background: none;
-  max-width: 700px;
+  max-width: 95vw;
   margin: 0 auto;
 }
 
@@ -788,11 +755,11 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
 /* Responsive pour le carrousel */
 @media (max-width: 768px) {
   .carousel-container {
-    height: 350px;
-    max-width: 100%;
-    width: 100%;
+    height: 300px;
+    max-width: 90vw;
+    width: 90vw;
     background: none;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
   }
   
@@ -809,7 +776,7 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   }
   
   .carousel-image {
-    height: 350px;
+    height: 300px;
     width: 100%;
     max-width: 100%;
     border: none;
@@ -840,11 +807,11 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
 
 @media (max-width: 480px) {
   .carousel-container {
-    max-width: 100%;
-    width: 100%;
-    height: 300px;
+    max-width: 90vw;
+    width: 90vw;
+    height: 250px;
     background: none;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
   }
   
@@ -861,7 +828,7 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
   }
   
   .carousel-image {
-    height: 300px;
+    height: 250px;
     width: 100%;
     max-width: 100%;
     border: none;
@@ -876,16 +843,16 @@ footer{background:linear-gradient(180deg,rgba(255,255,255,.6),#fff);border-top:1
 
 @media (max-width: 360px) {
   .carousel-container {
-    max-width: 100%;
-    width: 100%;
-    height: 280px;
+    max-width: 90vw;
+    width: 90vw;
+    height: 220px;
     background: none;
-    margin: 0;
+    margin: 0 auto;
     padding: 0;
   }
   
   .carousel-image {
-    height: 280px;
+    height: 220px;
     width: 100%;
     max-width: 100%;
     border: none;
