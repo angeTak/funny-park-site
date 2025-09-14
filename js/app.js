@@ -99,20 +99,20 @@ if (yearEl) {
   // surligner la ligne du jour
   const rows = $$('#horaires table tbody tr');
   if (rows.length > 0) {
-    rows.forEach(r=>{
+  rows.forEach(r=>{
       if(r.firstElementChild && r.firstElementChild.textContent.toLowerCase()===day.toLowerCase()){
-        r.classList.add('today');
-      }
-    });
+      r.classList.add('today');
+    }
+  });
   }
 
   const slot = schedule[day.toLowerCase()];
   const statusEl = $('#statusPark');
   if (statusEl) {
-    if(!slot){
-      statusEl.classList.add('closed');
-      statusEl.innerHTML = '🔴 Fermé aujourd\'hui (Lundi)';
-      return;
+  if(!slot){
+    statusEl.classList.add('closed');
+    statusEl.innerHTML = '🔴 Fermé aujourd\'hui (Lundi)';
+    return;
     }
   }
   const [start,end] = slot;
@@ -123,12 +123,12 @@ if (yearEl) {
   const closeMin = toMinutes(end[0], end[1]);
 
   if (statusEl) {
-    if(nowMin>=openMin && nowMin<closeMin){
-      statusEl.classList.add('open');
-      statusEl.innerHTML = `🟢 Ouvert — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
-    }else{
-      statusEl.classList.add('closed');
-      statusEl.innerHTML = `🔴 Fermé — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
+  if(nowMin>=openMin && nowMin<closeMin){
+    statusEl.classList.add('open');
+    statusEl.innerHTML = `🟢 Ouvert — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
+  }else{
+    statusEl.classList.add('closed');
+    statusEl.innerHTML = `🔴 Fermé — aujourd\'hui ${fmt(start[0],start[1])}–${fmt(end[0],end[1])} (heure de Lomé)`;
     }
   }
 })();
@@ -512,8 +512,8 @@ function closeImageLightbox() {
   if (lightbox) {
     lightbox.style.opacity = '0';
     setTimeout(() => {
-      lightbox.remove();
-      document.body.style.overflow = '';
+    lightbox.remove();
+    document.body.style.overflow = '';
     }, 300);
   }
 }
